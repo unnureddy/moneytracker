@@ -1,0 +1,19 @@
+{
+  "version": "2.0",
+  "name": "transactionFunction",
+  "runtime": "nodejs18.x",
+  "handler": "index.handler",
+  "timeout": 25,
+  "memorySize": 128,
+  "environment": {
+    "STORAGE_TRANSACTIONTABLE_NAME": "Transaction-${env}",
+    "REGION": "us-east-1"
+  },
+  "dependsOn": [
+    {
+      "category": "storage",
+      "resourceName": "transactionTable",
+      "attributes": ["Name", "Arn"]
+    }
+  ]
+}
