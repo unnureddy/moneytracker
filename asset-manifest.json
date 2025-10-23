@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/moneytracker/static/css/main.e5edef65.css",
+    "main.js": "/moneytracker/static/js/main.668afde0.js",
+    "index.html": "/moneytracker/index.html",
+    "main.e5edef65.css.map": "/moneytracker/static/css/main.e5edef65.css.map",
+    "main.668afde0.js.map": "/moneytracker/static/js/main.668afde0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e5edef65.css",
+    "static/js/main.668afde0.js"
+  ]
+}
