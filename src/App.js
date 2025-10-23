@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Dashboard from './components/Dashboard';
-import TransactionForm from './components/TransactionForm';
-import TransactionList from './components/TransactionList';
+import './pages/Pages.css';
+import HomePage from './pages/HomePage';
+import CreditsPage from './pages/CreditsPage';
+import ExpensesPage from './pages/ExpensesPage';
+import AllTransactionsPage from './pages/AllTransactionsPage';
 import AuthComponent from './components/AuthComponent';
 import { transactionService } from './services/transactionService';
 
@@ -79,6 +82,17 @@ function App() {
     }
   };
 
+  const handleEditTransaction = async (updatedTransaction) => {
+    try {
+      const updated = await transactionService.updateTransaction(updatedTransaction.id, updatedTransaction);
+      setTransactions(transactions.map(t => 
+        t.id === updated.id ? updated : t
+      ));
+    } catch (error) {
+      console.error('Error updating transaction:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -93,30 +107,69 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="app-header">
-        <div className="header-content">
-          <h1>💰 MoneyTracker</h1>
-          <div className="user-info">
-            <span>Welcome, {user?.username || 'User'}!</span>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
+    <Router>
+      <div className="App">
+        <header className="app-header">
+          <div className="header-content">
+            <h1>💰 MoneyTracker</h1>
+            <div className="user-info">
+              <span>Welcome, {user?.username || 'User'}!</span>
+              <button onClick={handleLogout} className="logout-btn">Logout</button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="app-main">
-        <Dashboard transactions={transactions} />
-        <TransactionForm onAddTransaction={handleAddTransaction} />
-        <TransactionList 
-          transactions={transactions} 
-          onDeleteTransaction={handleDeleteTransaction}
-        />
-      </main>
+        <main className="app-main">
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <HomePage 
+                  transactions={transactions} 
+                  onAddTransaction={handleAddTransaction}
+                  onDeleteTransaction={handleDeleteTransaction}
+                  onEditTransaction={handleEditTransaction}
+                />
+              } 
+            />
+            <Route 
+              path="/credits" 
+              element={
+                <CreditsPage 
+                  transactions={transactions} 
+                  onDeleteTransaction={handleDeleteTransaction}
+                  onEditTransaction={handleEditTransaction}
+                />
+              } 
+            />
+            <Route 
+              path="/expenses" 
+              element={
+                <ExpensesPage 
+                  transactions={transactions} 
+                  onDeleteTransaction={handleDeleteTransaction}
+                  onEditTransaction={handleEditTransaction}
+                />
+              } 
+            />
+            <Route 
+              path="/transactions" 
+              element={
+                <AllTransactionsPage 
+                  transactions={transactions} 
+                  onDeleteTransaction={handleDeleteTransaction}
+                  onEditTransaction={handleEditTransaction}
+                />
+              } 
+            />
+          </Routes>
+        </main>
 
-      <footer className="app-footer">
-        <p>Built with AWS Amplify, Lambda, API Gateway, DynamoDB & Cognito</p>
-      </footer>
-    </div>
+        <footer className="app-footer">
+          <p>Built with AWS Amplify, Lambda, API Gateway, DynamoDB & Cognito</p>
+        </footer>
+      </div>
+    </Router>
   );
 }
 
